@@ -1,0 +1,7 @@
+# requirements.txt for MCP server and client demo
+fastapi
+uvicorn
+httpx
+pydantic
+fastmcp
+groq
