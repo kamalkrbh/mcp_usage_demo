@@ -1,7 +1,4 @@
 # requirements.txt for MCP server and client demo
-fastapi
-uvicorn
-httpx
-pydantic
-fastmcp
-groq
+requests         # HTTP client for server health checks and requests
+fastmcp          # Model Context Protocol server and client library
+groq             # Groq API client for LLM integration demos
