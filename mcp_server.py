@@ -11,7 +11,7 @@ mcp = FastMCP(name="DemoMCPServer")
 
 # Simple tools for demonstration
 @mcp.tool
-def get_weather(city: str) -> dict:
+def get_weather(city: str) -> dict: ##Get Weather
     """Get weather information for a city."""
     # Simulated weather data
     weather_data = {

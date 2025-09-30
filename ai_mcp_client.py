@@ -29,9 +29,9 @@ async def ai_mcp_client_demo():
     
     # Connect to MCP server
     # MCP Client URL Options based on server transport:
-    # - SSE (current):           "http://localhost:8765/sse"
-    # - HTTP:                    "http://localhost:8765"
-    # - Streamable HTTP:         "http://localhost:8765/stream"
+    # - SSE (current):           Client("http://localhost:8765/sse")
+    # - HTTP:                    Client("http://localhost:8765")
+    # - Streamable HTTP:         Client("http://localhost:8765/stream")
     # - STDIO:                   Client("mcp_server.py") - simple file path syntax
     mcp_client = Client("http://localhost:8765/sse")
     async with mcp_client:
@@ -41,31 +41,10 @@ async def ai_mcp_client_demo():
         available_tools = [tool.name for tool in tools]
         print(f"Available tools: {available_tools}")
         
-        # Show tools with their MCP schemas
-        print("\n🔍 AI analyzing MCP tool schemas:")
-        tools_description = []
+        # Show tools discovered via MCP
+        print(f"\n🔍 AI discovered {len(tools)} tools via MCP:")
         for tool in tools:
-            print(f"\n• {tool.name}:")
-            print(f"  Description: {tool.description}")
-            
-            tool_info = f"- {tool.name}: {tool.description}"
-            if hasattr(tool, 'inputSchema') and tool.inputSchema:
-                properties = tool.inputSchema.get('properties', {})
-                required = tool.inputSchema.get('required', [])
-                print(f"  Parameters: {list(properties.keys())}")
-                print(f"  Required: {required}")
-                
-                params_info = []
-                for param, details in properties.items():
-                    param_type = details.get('type', 'unknown')
-                    is_required = " (required)" if param in required else " (optional)"
-                    params_info.append(f"{param}: {param_type}{is_required}")
-                tool_info += f" Parameters: {', '.join(params_info)}"
-            else:
-                print("  Parameters: No schema")
-                tool_info += " Parameters: None"
-            
-            tools_description.append(tool_info)
+            print(f"  • {tool.name}: {tool.description}")
         
         # User requests to process
         user_requests = [
@@ -79,22 +58,22 @@ async def ai_mcp_client_demo():
         for user_input in user_requests:
             print(f"\n👤 User: {user_input}")
             
-            # Create prompt for LLM to choose the right tool
-            tools_list = "\n".join(tools_description)
+            # Create prompt for LLM to choose the right tool - Use tools directly as strings
+            tools_str = "\n\n".join(str(tool) for tool in tools)
             prompt = f"""You are an AI assistant that can call tools to help users. 
-                            Available tools:
-                            {tools_list}
+                        Available tools:
+                        {tools_str}
 
-                            User query: "{user_input}"
+                        User query: "{user_input}"
 
-                            Based on the user query, determine which tool to use and what parameters to provide.
-                            Respond with ONLY a JSON object in this format:
-                            {{
-                                "tool_name": "tool_name_here",
-                                "parameters": {{"param1": "value1", "param2": "value2"}}
-                            }}
+                        Based on the user query, determine which tool to use and what parameters to provide.
+                        Respond with ONLY a JSON object in this format:
+                        {{
+                            "tool_name": "tool_name_here",
+                            "parameters": {{"param1": "value1", "param2": "value2"}}
+                        }}
 
-                            Do not include any other text in your response."""
+                        Do not include any other text in your response."""
 
             try:
                 # Call LLM to decide which tool to use
@@ -103,7 +82,7 @@ async def ai_mcp_client_demo():
                 if GROQ_API_KEY != "your-groq-api-key-here":
                     chat_completion = groq_client.chat.completions.create(
                         messages=[{"role": "user", "content": prompt}],
-                        model="llama3-8b-8192",
+                        model="llama-3.1-8b-instant",
                         temperature=0.1
                     )
                     

@@ -38,9 +38,9 @@ async def simple_mcp_client_demo():
     print("=" * 50)
     
     # MCP Client URL Options based on server transport:
-    # - SSE (current):           "http://localhost:8765/sse"
-    # - HTTP:                    "http://localhost:8765"
-    # - Streamable HTTP:         "http://localhost:8765/stream"
+    # - SSE (current):           Client("http://localhost:8765/sse")
+    # - HTTP:                    Client("http://localhost:8765")
+    # - Streamable HTTP:         Client("http://localhost:8765/stream")
     # - STDIO:                   Client("mcp_server.py") - simple file path syntax
     client = Client("http://localhost:8765/sse")
     async with client:

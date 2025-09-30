@@ -28,7 +28,6 @@ Usage:
 import json
 import inspect
 import os
-from mcp_server import get_weather, calculate, get_user_info
 from groq import Groq
 
 
@@ -167,39 +166,20 @@ def function_calling_demo():
     for user_input in user_requests:
         print(f"\nUser: {user_input}")
         
-        # Create prompt for LLM with function schemas
-        functions_description = []
-        for schema in function_schemas:
-            func_info = schema['function']
-            name = func_info['name']
-            desc = func_info['description']
-            params = func_info['parameters']['properties']
-            required = func_info['parameters']['required']
-            
-            param_list = []
-            for param, details in params.items():
-                param_type = details['type']
-                is_req = " (required)" if param in required else " (optional)"
-                param_list.append(f"{param}: {param_type}{is_req}")
-            
-            functions_description.append(f"- {name}: {desc} | Parameters: {', '.join(param_list)}")
-        
-        functions_list = "\n".join(functions_description)
-        
+        # Create prompt for LLM with function schemas directly
         prompt = f"""You are an AI assistant that can call functions to help users.
-Available functions:
-{functions_list}
+                    Available function schemas: {json.dumps(function_schemas, indent=2)}
 
-User query: "{user_input}"
+                    User query: "{user_input}"
 
-Based on the user query, determine which function to call and what parameters to provide.
-Respond with ONLY a JSON object in this format:
-{{
-    "function_name": "function_name_here",
-    "parameters": {{"param1": "value1", "param2": "value2"}}
-}}
+                    Based on the user query, determine which function to call and what parameters to provide.
+                    Respond with ONLY a JSON object in this format:
+                    {{
+                        "function_name": "function_name_here",
+                        "parameters": {{"param1": "value1", "param2": "value2"}}
+                    }}
 
-Do not include any other text in your response."""
+                    Do not include any other text in your response."""
 
         try:
             # Call LLM to decide which function to use
@@ -235,7 +215,11 @@ Do not include any other text in your response."""
                                 parameters["b"]
                             )
                         elif function_name == "get_user_info":
-                            result = available_functions[function_name](parameters["user_id"])
+                            # Fix: Convert string user_id to integer if needed
+                            user_id = parameters["user_id"]
+                            if isinstance(user_id, str) and user_id.isdigit():
+                                user_id = int(user_id)
+                            result = available_functions[function_name](user_id)
                         
                         if result is not None:
                             print(f"   Result: {result}")
@@ -272,7 +256,11 @@ Do not include any other text in your response."""
                             function_choice["parameters"]["b"]
                         )
                     elif function_choice["function_name"] == "get_user_info":
-                        result = available_functions["get_user_info"](function_choice["parameters"]["user_id"])
+                        # Fix: Convert user_id to integer if needed
+                        user_id = function_choice["parameters"]["user_id"]
+                        if isinstance(user_id, str) and str(user_id).isdigit():
+                            user_id = int(user_id)
+                        result = available_functions["get_user_info"](user_id)
                     
                     if result is not None:
                         print(f"   Result: {result}")
