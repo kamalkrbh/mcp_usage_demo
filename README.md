@@ -1,6 +1,6 @@
 # MCP vs Function Calling Demo
 
-[![Demo Video](https://img.youtube.com/vi/MWR2h22k9ro/0.jpg)](https://youtu.be/MWR2h22k9ro)
+[![Demo Video](https://img.youtube.com/vi/MWR2h22k9ro/maxresdefault.jpg)](https://youtu.be/MWR2h22k9ro)
 
 **📺 YouTube Video:** [MCP vs Function Calling - Complete Guide](https://youtu.be/MWR2h22k9ro?si=-EadFT3rkhTDxRw9)
 
