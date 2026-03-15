@@ -1,5 +1,7 @@
 # MCP vs Function Calling Demo
 
+[![Demo Video](https://img.youtube.com/vi/MWR2h22k9ro/0.jpg)](https://youtu.be/MWR2h22k9ro)
+
 **📺 YouTube Video:** [MCP vs Function Calling - Complete Guide](https://youtu.be/MWR2h22k9ro?si=-EadFT3rkhTDxRw9)
 
 **Thesis:** "MCP server ≠ Function Calling and is NOT only used in case of AI"
@@ -221,4 +223,4 @@ These demos prove that **MCP provides a standardized protocol for tool sharing t
 4. **Optimization Techniques** - Best practices for efficient LLM integration
 5. **Real-World Applications** - When to use MCP vs traditional function calling
 
-**Join the discussion in the video comments and share your MCP implementations!**
+**Join the discussion in the video comments and share your MCP implementations!"
